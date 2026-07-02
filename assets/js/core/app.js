@@ -202,7 +202,7 @@ class RootFactsApp {
 			this.ui.showResults(detectionResult, { funFact });
 		} catch (error) {
 			logError('Gagal menampilkan hasil', error);
-			this.ui.updateFunFactState('error');
+			this.ui.updateFunFactState('error', { funFact: error.message });
 		}
 	}
 }

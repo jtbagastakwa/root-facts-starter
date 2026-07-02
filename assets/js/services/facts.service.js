@@ -96,7 +96,7 @@ class FunFactService {
 			if (result && result.length > 0 && result[0].generated_text) {
 				return result[0].generated_text;
 			}
-			return "Fakta tidak tersedia.";
+			return "Model mengembalikan hasil kosong atau tidak valid.";
 		} catch (error) {
 			logError('Error generating fun fact', error);
 			throw new Error(`Failed to generate fun fact: ${error.message}`);

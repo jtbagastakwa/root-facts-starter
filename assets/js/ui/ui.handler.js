@@ -198,7 +198,8 @@ class UIHandler {
 				hideElement(this.funFactLoading);
 				showElement(this.funFactContent);
 				if (this.funFactText) {
-					setElementText(this.funFactText, 'Fakta tidak tersedia');
+					const errorMsg = funFactData && funFactData.funFact ? funFactData.funFact : 'Fakta tidak tersedia';
+					setElementText(this.funFactText, errorMsg);
 				}
 				break;
 		}
