@@ -72,16 +72,23 @@ class RootFactsApp {
 				this.ui.updateHeaderStatus(`Memuat model (${totalProgress}%)...`, true);
 			};
 
-			await Promise.all([
-				this.detector.loadModel((fraction) => {
-					tfProgress = fraction;
-					updateProgressUI();
-				}),
-				this.funFactGenerator.loadModel((fraction) => {
+			// Muat model deteksi (Wajib)
+			await this.detector.loadModel((fraction) => {
+				tfProgress = fraction;
+				updateProgressUI();
+			});
+
+			// Muat model AI Generatif (Opsional, jangan matikan aplikasi jika gagal)
+			try {
+				await this.funFactGenerator.loadModel((fraction) => {
 					hfProgress = fraction;
 					updateProgressUI();
-				})
-			]);
+				});
+			} catch (hfError) {
+				console.warn("Model FunFact gagal dimuat. Aplikasi tetap akan berjalan tanpa fitur fakta.", hfError);
+				hfProgress = 1; // Anggap selesai agar progress bar tidak stuck
+				updateProgressUI();
+			}
 			
 			this.ui.updateHeaderStatus('Siap', false);
 			this.ui.enableButton();
@@ -90,6 +97,7 @@ class RootFactsApp {
 			// TODO [Skilled] Perbarui status header UI menjadi 'Error' jika inisialisasi gagal
 			this.ui.updateHeaderStatus('Error', false);
 			this.ui.showError(`Gagal menginisialisasi: ${error.message}`);
+			// Tetap biarkan tombol didisable jika detector gagal
 			this.ui.disableButton();
 		}
 	}
