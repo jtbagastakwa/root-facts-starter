@@ -12,18 +12,24 @@ class DetectionService {
 	// TODO [Advance] Gunakan strategi Backend Adaptive seperti yang telah dipelajari sebelumnya
 	async loadModel(onProgress) {
 		try {
-			if (isWebGPUSupported()) {
-				try {
+			try {
+				if (isWebGPUSupported()) {
 					await tf.setBackend('webgpu');
-					await tf.ready();
-				} catch (e) {
-					console.warn('WebGPU failed, falling back to webgl', e);
+				} else {
 					await tf.setBackend('webgl');
 				}
-			} else {
-				await tf.setBackend('webgl');
+				await tf.ready();
+			} catch (e) {
+				console.warn('Primary backend failed, falling back to webgl', e);
+				try {
+					await tf.setBackend('webgl');
+					await tf.ready();
+				} catch (e2) {
+					console.warn('WebGL failed, falling back to cpu', e2);
+					await tf.setBackend('cpu');
+					await tf.ready();
+				}
 			}
-			await tf.ready();
 
 			const modelURL = './model/model.json';
 			const metadataURL = './model/metadata.json';

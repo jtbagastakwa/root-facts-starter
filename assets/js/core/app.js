@@ -94,11 +94,10 @@ class RootFactsApp {
 			this.ui.enableButton();
 		} catch (error) {
 			logError('Gagal menginisialisasi aplikasi', error);
-			// TODO [Skilled] Perbarui status header UI menjadi 'Error' jika inisialisasi gagal
 			this.ui.updateHeaderStatus('Error', false);
-			this.ui.showError(`Gagal menginisialisasi: ${error.message}`);
-			// Tetap biarkan tombol didisable jika detector gagal
-			this.ui.disableButton();
+			this.ui.showError(`Gagal memuat AI: ${error.message}`);
+			// Tetap aktifkan tombol kamera agar fitur dasar (kamera) tetap bisa dicoba
+			this.ui.enableButton();
 		}
 	}
 
