@@ -42,7 +42,7 @@ class DetectionService {
 			}
 			this.labels = metadata.labels;
 			
-			this.model = await tf.loadGraphModel(modelURL, {
+			this.model = await tf.loadLayersModel(modelURL, {
 				onProgress: (fraction) => {
 					if (onProgress) onProgress(fraction);
 				}
