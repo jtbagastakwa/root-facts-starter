@@ -5,21 +5,21 @@ if (workbox) {
   
   // Set precache and route
   workbox.precaching.precacheAndRoute([
-    { url: '/index.html', revision: '6' },
-    { url: '/manifest.json', revision: '6' },
-    { url: '/assets/css/styles.css', revision: '6' },
-    { url: '/assets/js/core/app.js', revision: '6' },
-    { url: '/assets/js/core/config.js', revision: '6' },
-    { url: '/assets/js/core/utils.js', revision: '6' },
-    { url: '/assets/js/services/camera.service.js', revision: '6' },
-    { url: '/assets/js/services/detection.service.js', revision: '6' },
-    { url: '/assets/js/services/facts.service.js', revision: '6' },
-    { url: '/assets/js/ui/ui.handler.js', revision: '6' },
-    { url: '/model/model.json', revision: '6' },
-    { url: '/model/metadata.json', revision: '6' },
-    { url: '/model/weights.bin', revision: '6' },
-    { url: '/assets/icons/icon-192x192.png', revision: '6' },
-    { url: '/assets/icons/apple-touch-icon.png', revision: '6' }
+    { url: '/index.html', revision: '7' },
+    { url: '/manifest.json', revision: '7' },
+    { url: '/assets/css/styles.css', revision: '7' },
+    { url: '/assets/js/core/app.js', revision: '7' },
+    { url: '/assets/js/core/config.js', revision: '7' },
+    { url: '/assets/js/core/utils.js', revision: '7' },
+    { url: '/assets/js/services/camera.service.js', revision: '7' },
+    { url: '/assets/js/services/detection.service.js', revision: '7' },
+    { url: '/assets/js/services/facts.service.js', revision: '7' },
+    { url: '/assets/js/ui/ui.handler.js', revision: '7' },
+    { url: '/model/model.json', revision: '7' },
+    { url: '/model/metadata.json', revision: '7' },
+    { url: '/model/weights.bin', revision: '7' },
+    { url: '/assets/icons/icon-192x192.png', revision: '7' },
+    { url: '/assets/icons/apple-touch-icon.png', revision: '7' }
   ]);
 
   // Route for model bin files to be cached safely
