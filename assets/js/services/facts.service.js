@@ -18,10 +18,9 @@ class FunFactService {
 	async loadModel(onProgress) {
 		try {
 			this.currentBackend = isWebGPUSupported() ? 'webgpu' : 'wasm';
+			const modelId = 'Xenova/LaMini-Flan-T5-77M'; // Gunakan model 77M yang jauh lebih ringan (bukan 783M)
 			
-			// Memuat model text-generation atau text2text-generation yang ringan
-			this.generator = await pipeline('text2text-generation', 'Xenova/LaMini-Flan-T5-783M', {
-				device: this.currentBackend,
+			const pipelineOptions = {
 				progress_callback: (x) => {
 					if (x.status === 'progress' && onProgress) {
 						onProgress(x.progress / 100);
@@ -29,7 +28,26 @@ class FunFactService {
 						onProgress(1);
 					}
 				}
-			});
+			};
+
+			try {
+				this.generator = await pipeline('text2text-generation', modelId, {
+					...pipelineOptions,
+					device: this.currentBackend,
+				});
+			} catch (e) {
+				if (this.currentBackend === 'webgpu') {
+					console.warn('Transformers.js WebGPU gagal, mencoba fallback ke WASM', e);
+					this.currentBackend = 'wasm';
+					this.generator = await pipeline('text2text-generation', modelId, {
+						...pipelineOptions,
+						device: 'wasm',
+					});
+				} else {
+					throw e;
+				}
+			}
+			
 			this.isModelLoaded = true;
 		} catch (error) {
 			logError('Error loading Transformers.js model', error);
