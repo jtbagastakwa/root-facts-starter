@@ -29,26 +29,28 @@ class CameraService {
 	// TODO [Basic] Implementasikan metode untuk memuat daftar kamera yang tersedia
 	async loadCameras() {
 		try {
-			// Meminta izin sementara untuk bisa mendapatkan label perangkat
-			const tempStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
 			const devices = await navigator.mediaDevices.enumerateDevices();
 			const videoDevices = devices.filter(device => device.kind === 'videoinput');
-			
-			// Hentikan stream sementara
-			tempStream.getTracks().forEach(track => track.stop());
 
 			if (this.cameraSelect && videoDevices.length > 0) {
+				// Simpan nilai yang sedang dipilih sebelum memperbarui daftar
+				const currentValue = this.cameraSelect.value;
 				this.cameraSelect.innerHTML = '';
+				
 				videoDevices.forEach((device, index) => {
 					const option = document.createElement('option');
 					option.value = device.deviceId;
 					option.text = device.label || `Kamera ${index + 1}`;
 					this.cameraSelect.appendChild(option);
 				});
+
+				// Kembalikan ke pilihan sebelumnya jika masih ada
+				if (currentValue && Array.from(this.cameraSelect.options).some(opt => opt.value === currentValue)) {
+					this.cameraSelect.value = currentValue;
+				}
 			}
 		} catch (error) {
 			logError('Gagal memuat kamera', error);
-			throw new Error(`Akses kamera gagal: ${error.message}`);
 		}
 	}
 
@@ -72,7 +74,8 @@ class CameraService {
 				}
 			}
 
-			videoConstraint.frameRate = { ideal: this.fps, max: this.fps };
+			// Hindari constraint "max" yang ketat, gunakan ideal saja agar tidak memicu OverconstrainedError
+			videoConstraint.frameRate = { ideal: this.fps };
 
 			const constraints = {
 				video: videoConstraint,
@@ -85,8 +88,10 @@ class CameraService {
 				this.video.srcObject = this.stream;
 				
 				return new Promise((resolve) => {
-					this.video.onloadedmetadata = () => {
+					this.video.onloadedmetadata = async () => {
 						this.video.play();
+						// Perbarui daftar kamera setelah izin diberikan (agar mendapatkan label yang benar)
+						await this.loadCameras();
 						resolve();
 					};
 				});

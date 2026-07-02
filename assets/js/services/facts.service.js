@@ -1,5 +1,5 @@
 import { logError, isWebGPUSupported } from '../core/utils.js';
-import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2';
+import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers';
 
 // Nonaktifkan pencarian model lokal agar selalu menggunakan Hugging Face Hub
 env.allowLocalModels = false;
